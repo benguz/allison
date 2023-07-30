@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Allison! I love you!</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="I love you, Allison Hartley" />
+  <link rel="stylesheet" type="text/css" href="styles.css" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+
+</head>
+<body>
+    <p><strong>I love you</strong></p>
+    <br>
+    <p>use your touchscreen, swipe horizontally only</p>
+    <br>
+    <ul>
+        <li>
+          <a href="#">
+            <h2>Title #1</h2>
+            <p>Text Content #1</p>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <h2>Title #2</h2>
+            <p>Text Content #2</p>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <h2>Title #3</h2>
+            <p>Text Content #3</p>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <h2>Title #4</h2>
+            <p>Text Content #4</p>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <h2>Title #5</h2>
+            <p>Text Content #5</p>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <h2>Title #6</h2>
+            <p>Text Content #6</p>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <h2>Title #7</h2>
+            <p>Text Content #7</p>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <h2>Title #8</h2>
+            <p>Text Content #8</p>
+          </a>
+        </li>
+      </ul>
+
+    <script>
+var listItems = Array.from(document.querySelectorAll('ul li'));
+
+
+let deltaSwipe = 200;
+// shortens swipe distance for mobile users
+if (window.innerWidth < 1000) {
+    deltaSwipe = 70;
+}
+var swipeDistance = 
+listItems.forEach(function(listItem) {
+  var hammerInstance = new Hammer(listItem);
+  
+  var removed = 0;
+  hammerInstance.on('pan', function(e) {
+    listItem.style.transition = '';
+    listItem.style.transform = 'translateX(' + e.deltaX + 'px)';
+    
+
+    if (Math.abs(e.deltaX) > deltaSwipe && Math.abs(e.deltaX) > Math.abs(e.deltaY)) { 
+        listItem.style.transition = 'transform 0.3s ease';
+        listItem.style.transform = 'translateX(' + (e.deltaX * 2) + 'px)';
+        removed = 1;
+        setTimeout(function() {
+            listItem.parentNode.removeChild(listItem);
+        }, 200);
+    } 
+  });
+
+  
+
+  hammerInstance.on('panend', function(e) {
+    if (removed === 0) {
+        listItem.style.transition = 'transform 0.3s ease';
+        listItem.style.transform = '';
+    }
+
+  });
+
+  
+});
+
+
+function handleMousePan(e, listItem) {
+  // Implementation for mouse
+  if(Math.abs(e.deltaX) > 500) {
+    listItem.style.transition = 'transform 0.3s ease';
+    listItem.style.transform = 'translateX(100px)';
+    setTimeout(function() {
+      listItem.parentNode.removeChild(listItem);
+    }, 300);
+  }
+}
+
+    </script>
+</body>
+</html>
