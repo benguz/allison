@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Allison! I love you! Slideshow!</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Slideshow! Slideshow! Slideshow! Slideshow! Slideshow! Slideshow! Slideshow!" />
+  <link rel="stylesheet" type="text/css" href="slideshow.css" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+</head>
+<body >
+
+    <div class="image-slideshow">
+        <div class="image fade">
+            <img src="/slideshow/allison1 (1).jpeg" alt="Palm Trees">
+          </div>
+          <div class="image fade">
+            <img src="/slideshow/allison1 (2).jpg" alt="Palm Trees">
+          </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (2).jpeg" alt="Mountain Top">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (3).jpg" alt="Palm Trees">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (3).jpeg" alt="Neon Sign">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (2).jpg" alt="Mountain Top">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (4).jpeg" alt="Palm Trees">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (4).jpg" alt="Neon Sign">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (5).jpeg" alt="Mountain Top">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (5).jpg" alt="Palm Trees">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (6).jpg" alt="Neon Sign">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (7).jpg" alt="Mountain Top">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (8).jpg" alt="Palm Trees">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (9).jpg" alt="Neon Sign">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (10).jpg" alt="Mountain Top">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (11).jpg" alt="Palm Trees">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (12).jpg" alt="Neon Sign">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (13).jpg" alt="Mountain Top">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (14).jpg" alt="Palm Trees">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (15).jpg" alt="Neon Sign">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (16).jpg" alt="Mountain Top">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (17).jpg" alt="Palm Trees">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (18).jpg" alt="Neon Sign">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (19).jpg" alt="Mountain Top">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (20).jpg" alt="Palm Trees">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (21).jpg" alt="Neon Sign">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (22).jpg" alt="Mountain Top">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (23).jpg" alt="Palm Trees">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (24).jpg" alt="Neon Sign">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (25).jpg" alt="Mountain Top">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (26).jpg" alt="Palm Trees">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (27).jpg" alt="Neon Sign">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (28).jpg" alt="Mountain Top">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (29).jpg" alt="Palm Trees">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (30).jpg" alt="Neon Sign">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (31).jpg" alt="Mountain Top">
+        </div>
+        <div class="image fade">
+          <img src="/slideshow/allison1 (32).jpg" alt="Palm Trees">
+        </div>
+      </div>
+   
+
+<script>
+    
+    let index = 0;
+displayImages();
+function displayImages() {
+  let i;
+  const images = document.getElementsByClassName("image");
+  for (i = 0; i < images.length; i++) {
+    images[i].style.display = "none";
+  }
+  index++;
+  if (index > images.length) {
+    index = 1;
+  }
+  images[index-1].style.display = "block";
+  setTimeout(displayImages, 2000); 
+}
+
+</script>
+</body>
+
+</html>

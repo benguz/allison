@@ -1,0 +1,26 @@
+* {
+    box-sizing: border-box
+    
+}
+body {
+    background-color: #FFCCFF;
+
+}
+.image-slideshow {
+  width: 500px;
+  max-width: 100%;
+  height: auto;
+  position: relative;
+  margin: auto;
+}
+img {
+  width: 100%
+}
+.fade {
+  animation-name: fade;
+  animation-duration: 4s;
+}
+@keyframes fade {
+  from {opacity: .5}
+  to {opacity: 1}
+}
