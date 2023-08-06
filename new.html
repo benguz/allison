@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>This is where you can see new notes I add</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="I love you, Allison Hartley" />
+  <link rel="stylesheet" type="text/css" href="styles.css" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+</head>
+<body>
+    <h2>This is where you can see new notes I add</h2>
+    <br>
+    <br>
+    <ul id="myList">
+        <div>
+            <br><br><br>
+            <br><br>
+            <p>You made it :) </p>
+        </div>
+
+        <li>
+          <a href="#" class="element">
+            <!-- <h2>Title #2</h2> -->
+            <p class="small">HONK</p>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="element">
+            <p class="small">You treated me like a hero for buying you toilet paper.</p>
+          </a>
+        </li>
+        <li>
+            <a href="#" class="element">
+              <p>This is where you can see new notes I add!</p>
+            </a>
+          </li>
+
+
+      </ul>
+
+    <script>
+
+
+$(".element").click(function() {
+  var newElement ="";
+  var tears = ["🤨", "🙄", "😳😳😳", "💅💅", "❤️", "💗", "💖💖💖", "💚", "🧡", "💛", "🤍", "💙"]
+
+  var tear = tears[Math.floor(Math.random() * tears.length)]
+    newElement = $(`<span class='floating-emoji'>${tear}</span>`);
+
+  $(this).parent().append(newElement);
+
+  /* Choose an animation randomly */
+//   var animations = ['floatPath1', 'floatPath2', 'floatPath3','floatPath4', 'floatPath5', 'floatPath6']; // Add more animations as needed
+  var test = ['floatPath2', 'floatPath3', 'floatPath4']; // Add more animations as needed
+
+  var animation = test[Math.floor(Math.random() * test.length)];
+
+
+  /* Apply the animation */
+  newElement.css('animation', `${animation} 1s forwards`);
+
+  setTimeout(function() {
+    newElement.remove();
+  }, 2000); // Remove the emoji after the animation completes (2 seconds)
+});
+  
+  
+
+
+
+let deltaSwipe = 170;
+// shortens swipe distance for mobile users
+if (window.innerWidth < 1000) {
+    deltaSwipe = 70;
+}
+var swipeDistance = 
+listItems.forEach(function(listItem) {
+  var hammerInstance = new Hammer(listItem);
+  
+  var removed = 0;
+  hammerInstance.on('pan', function(e) {
+    listItem.style.transition = '';
+    listItem.style.transform = 'translateX(' + e.deltaX + 'px)';
+    
+
+    if (Math.abs(e.deltaX) > deltaSwipe && Math.abs(e.deltaX) > Math.abs(e.deltaY)) { 
+        listItem.style.transition = 'transform 0.3s ease';
+        listItem.style.transform = 'translateX(' + (e.deltaX * 2) + 'px)';
+        removed = 1;
+        setTimeout(function() {
+            listItem.parentNode.removeChild(listItem);
+        }, 200);
+    } 
+  });
+
+  
+
+  hammerInstance.on('panend', function(e) {
+    if (removed === 0) {
+        listItem.style.transition = 'transform 0.3s ease';
+        listItem.style.transform = '';
+    }
+
+  });
+
+  
+});
+
+
+function handleMousePan(e, listItem) {
+  // Implementation for mouse
+  if(Math.abs(e.deltaX) > 500) {
+    listItem.style.transition = 'transform 0.3s ease';
+    listItem.style.transform = 'translateX(100px)';
+    setTimeout(function() {
+      listItem.parentNode.removeChild(listItem);
+    }, 300);
+  }
+}
+
+    </script>
+</body>
+</html>
