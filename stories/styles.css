@@ -1,0 +1,45 @@
+body {
+    font-family: 'Lora', serif;
+    color: #000;
+    background-color: #FFFAFB; 
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    max-height: 100vh;
+  }
+  p {
+    font-size: 30px;
+
+  }
+  a {
+    color: black;
+  }
+  .facts {
+    width: 40%;
+    max-height: 100%;
+    margin: 20px;
+  }
+
+
+.visual {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    max-height: 100%;
+}
+.visual img {
+    max-width: 100%;
+    max-height: 90%;
+    min-height: 40%;
+    height: 90%;
+    width: auto;
+}
+.visual p {
+    margin-top: 1px;
+    text-align: right;
+}
+
+
+@media (max-width: 768px) {
+
+}
