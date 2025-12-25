@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>A Secret Letter 💌</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Cormorant Garamond', serif;
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  min-height: 100vh;
+  color: #e8d5b7;
+  overflow-x: hidden;
+}
+
+/* Password Screen */
+.password-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.password-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.password-screen h1 {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  color: #e8d5b7;
+  margin-bottom: 10px;
+  text-shadow: 0 0 20px rgba(232, 213, 183, 0.3);
+}
+
+.password-screen p {
+  font-size: 1.2rem;
+  color: #a89f91;
+  margin-bottom: 30px;
+}
+
+.password-input {
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  font-family: 'Cormorant Garamond', serif;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(232, 213, 183, 0.3);
+  border-radius: 50px;
+  color: #e8d5b7;
+  text-align: center;
+  width: 280px;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.password-input:focus {
+  border-color: rgba(232, 213, 183, 0.6);
+  box-shadow: 0 0 20px rgba(232, 213, 183, 0.2);
+}
+
+.password-input::placeholder {
+  color: rgba(232, 213, 183, 0.4);
+}
+
+.password-error {
+  color: #ff6b6b;
+  margin-top: 15px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.password-error.show {
+  opacity: 1;
+}
+
+.password-hint {
+  margin-top: 40px;
+  font-size: 0.9rem;
+  color: #6b6b7b;
+  font-style: italic;
+}
+
+/* Letter Content */
+.letter-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 100px 40px 200px;
+  position: relative;
+}
+
+.letter-title {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(3rem, 10vw, 5rem);
+  text-align: center;
+  color: #e8d5b7;
+  margin-bottom: 60px;
+  text-shadow: 0 0 30px rgba(232, 213, 183, 0.3);
+}
+
+.letter-date {
+  text-align: center;
+  font-style: italic;
+  color: #a89f91;
+  margin-bottom: 60px;
+  font-size: 1.1rem;
+}
+
+.letter-paragraph {
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  line-height: 2;
+  margin-bottom: 40px;
+}
+
+.letter-paragraph.greeting {
+  font-size: clamp(1.4rem, 3.5vw, 1.7rem);
+}
+
+.letter-paragraph.signature {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(2rem, 5vw, 2.5rem);
+  text-align: right;
+  margin-top: 60px;
+}
+
+.letter-char {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.letter-char.revealed {
+  opacity: 1;
+}
+
+.highlight {
+  color: #f4a261;
+  font-weight: 500;
+}
+
+.emphasis {
+  font-style: italic;
+  color: #e9c46a;
+}
+
+/* Quiz Section */
+.quiz-section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  padding: 40px;
+  margin: 60px 0;
+  border: 1px solid rgba(232, 213, 183, 0.2);
+}
+
+.quiz-title {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2rem;
+  color: #e8d5b7;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.quiz-question {
+  margin-bottom: 30px;
+}
+
+.quiz-question p {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  color: #e8d5b7;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.quiz-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.quiz-option.selected {
+  background: rgba(232, 213, 183, 0.15);
+  border-color: rgba(232, 213, 183, 0.4);
+}
+
+.quiz-option input {
+  accent-color: #e8d5b7;
+  width: 18px;
+  height: 18px;
+}
+
+.quiz-option label {
+  cursor: pointer;
+  flex: 1;
+  font-size: 1rem;
+  color: #c4b8a8;
+}
+
+.quiz-submit {
+  display: block;
+  margin: 30px auto 0;
+  padding: 15px 40px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, #e8d5b7, #c4a77d);
+  color: #1a1a2e;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 600;
+}
+
+.quiz-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(232, 213, 183, 0.3);
+}
+
+.quiz-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.quiz-result {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.1rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.quiz-result.show {
+  opacity: 1;
+}
+
+.quiz-result.error {
+  color: #ff6b6b;
+}
+
+.quiz-result.success {
+  color: #a8e6cf;
+}
+
+.final-section {
+  display: none;
+}
+
+.final-section.unlocked {
+  display: block;
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .quiz-section {
+    padding: 25px 20px;
+    margin: 40px 0;
+  }
+  
+  .quiz-option {
+    padding: 10px 12px;
+  }
+}
+
+/* Letter Images */
+.letter-image-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 40px auto;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.letter-image-container.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.letter-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 600px) {
+  .letter-image-container {
+    max-width: 100%;
+    margin: 30px 0;
+  }
+  
+  .letter-image {
+    border-radius: 4px;
+  }
+}
+
+/* Cursor Trail */
+.trail-image {
+  position: fixed;
+  width: 65px;
+  height: 65px;
+  object-fit: cover;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.trail-image.fading {
+  opacity: 0;
+}
+
+/* Decorative Elements */
+.stars {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.star {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #e8d5b7;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: twinkle 3s infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #a89f91;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  animation: bounce 2s infinite;
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+.scroll-indicator.hidden {
+  opacity: 0;
+}
+
+.scroll-arrow {
+  font-size: 1.5rem;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(10px); }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .letter-container {
+    padding: 60px 25px 150px;
+  }
+  
+  .trail-image {
+    width: 55px;
+    height: 55px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Stars Background -->
+<div class="stars" id="stars"></div>
+
+<!-- Password Screen -->
+<div class="password-screen" id="passwordScreen">
+  <h1>Snugglufagus</h1>
+  <p>For snuggle experts only 💌</p>
+  <input type="password" class="password-input" id="passwordInput" placeholder="Enter the password..." autofocus>
+  <p class="password-error" id="passwordError">That's not quite right... try again 💕</p>
+  <p class="password-hint">Hint: arf arf arf</p>
+</div>
+
+<!-- Letter Content -->
+<div class="letter-container" id="letterContainer" style="display: none;">
+  <!-- <h1 class="letter-title letter-paragraph">Allison</h1> -->
+  
+  <!-- <p class="letter-date letter-paragraph">Merry christmas!</p> -->
+  
+  <p class="letter-paragraph greeting">Allison,</p>
+  
+  <p class="letter-paragraph">
+    I'm writing this secretly, on a clandestine mission to tell you how much I love you. The night is dark and the wind is howling, but lucky for me, I am not Merlin.
+  </p>
+  
+  <p class="letter-paragraph">
+    I love living with you. I feel like a hobbit in a wizard's house. Oh wait, that means nothing to you because you haven't read <i>The Hobbit</i>. Let me try again:
+    
+    I feel like a little kid on an infinite playdate, except instead of hanging out with another kiddo (who, in Weston, were all ragamuffins), I get to spend my life with a princess.
+  </p>
+  
+  <p class="letter-paragraph">
+    You make me feel so whole, loved, and snuggled. You are my redwood tree, my sycamore, my... eight other types of trees.
+    Sitting next to you is like holding a gregarious golden retriever, but less smelly.
+  </p>
+
+  <div class="letter-image-container">
+    <img src="/slideshow/allison1 (29).jpg" alt="Allison" class="letter-image">
+  </div>
+
+  
+  <p class="letter-paragraph">
+    When we met, I was just a boy who could barely whip cream. 
+    Little did I know I would become a boy who cried in front of a toaster oven, ran several miles weekly to get a carrot muffin, mastered the art of french toast, and ate millions of gluten free cookies.
+    Granted, food has been a major through line in my life (breakfast, lunch, dinner, and snack time(s)), and I'm glad it has been in our relationship.
+    Before you, my first love was sandwiches. Roast beef, lettuce, tomato, and mayo, ideally on a baguette. A testament to the strength of our love is, about a year into our relationship, I lost sandwiches and I didn't notice.
+  </p>
+  
+  <p class="letter-paragraph">
+    You are a million, juicy, delicious sandwiches. I'm talking about a million of the best sandwiches, like the one from Sam's Deli in Cape Cod or the one I never told you about from Finagel a Bagel that had this strawberry jam...
+  </p>
+  
+  <p class="letter-paragraph">
+    ANYWAYS, THIS LETTER IS ABOUT YOU. Since the first time we sat on a park bench together on our first date, I've been more or less obsessed with your hair, your smile, your laugh, your eyes, 
+    your intelligence, wit, giggles, prose, sharp editing, wonderful friends, formidable enemies, and piercing gaze. 
+
+    I love you. When you hold my hand, I feel safe, warm, and loved. The warmth is emotional, but sometimes physical, too.
+  </p>
+
+  <div class="letter-image-container">
+    <img src="/slideshow/allison1 (4).jpg" alt="Allison" class="letter-image">
+  </div>
+  
+  <p class="letter-paragraph">
+    When we would run to each other at the airport after months apart, I felt like I was in the most decadent, magical love story. I feel more love for you today than even in those moments, AND NOT BECAUSE THOSE MOMENTS WEREN'T MAGICAL. Like a potent, fantasical bean stalk, you grow more magical every day.
+  </p>
+  
+  <p class="letter-paragraph">
+    As you heard from Lilia on Thanksgiving, the most common jab at men in my family is, "You have no feeling for material!!" I am a prime example. Where are the tissues, how do I turn on the vacuum, and what is a screwdriver? 
+    I may make up for it with good looks and gumption, but I think there's another problem. I only have so many feelings, and they're all for you :)
+  </p>
+  
+  <!-- Quiz Section -->
+  <div class="quiz-section" id="quizSection">
+    <h3 class="quiz-title">👏 Unlock 👏 the 👏 Final 👏 Chapter 👏</h3>
+    
+    <div class="quiz-question">
+      <p><strong>1.</strong> What is Ben's social security number?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="selectOption(this, 'q1')">
+          <input type="radio" name="q1" id="q1a" value="a">
+          <label for="q1a">The digits sum to a prime number less than 90</label>
+        </div>
+        <div class="quiz-option" onclick="selectOption(this, 'q1')">
+          <input type="radio" name="q1" id="q1b" value="b">
+          <label for="q1b">Ben doesn't have one</label>
+        </div>
+        <div class="quiz-option" onclick="selectOption(this, 'q1')">
+          <input type="radio" name="q1" id="q1c" value="c">
+          <label for="q1c">This is a phishing scam, I'm not answering that</label>
+        </div>
+        <div class="quiz-option" onclick="selectOption(this, 'q1')">
+          <input type="radio" name="q1" id="q1d" value="d">
+          <label for="q1d">Wasn't the social security number just the friends we made along the way?</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="quiz-question">
+      <p><strong>2.</strong> What color was the stuffed animal sea creature Ben bought for Allison on his trip to Chicago?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="selectOption(this, 'q2')">
+          <input type="radio" name="q2" id="q2a" value="a">
+          <label for="q2a">Pink, purple polka dotted with unicorns</label>
+        </div>
+        <div class="quiz-option" onclick="selectOption(this, 'q2')">
+          <input type="radio" name="q2" id="q2b" value="b">
+          <label for="q2b">Turquoise</label>
+        </div>
+        <div class="quiz-option" onclick="selectOption(this, 'q2')">
+          <input type="radio" name="q2" id="q2c" value="c">
+          <label for="q2c">White</label>
+        </div>
+        <div class="quiz-option" onclick="selectOption(this, 'q2')">
+          <input type="radio" name="q2" id="q2d" value="d">
+          <label for="q2d">Allison hates stuffed animals, Ben never bought her one</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="quiz-question">
+      <p><strong>3.</strong> Why does Ben love Allison? <em>(select all that apply)</em></p>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="toggleCheckbox(this, 'q3a')">
+          <input type="checkbox" id="q3a" value="giggles">
+          <label for="q3a">Giggles</label>
+        </div>
+        <div class="quiz-option" onclick="toggleCheckbox(this, 'q3b')">
+          <input type="checkbox" id="q3b" value="snuggles">
+          <label for="q3b">Snuggles</label>
+        </div>
+        <div class="quiz-option" onclick="toggleCheckbox(this, 'q3c')">
+          <input type="checkbox" id="q3c" value="walking">
+          <label for="q3c">Funny walking movements</label>
+        </div>
+        <div class="quiz-option" onclick="toggleCheckbox(this, 'q3d')">
+          <input type="checkbox" id="q3d" value="warmth">
+          <label for="q3d">Warmth & charisma</label>
+        </div>
+      </div>
+    </div>
+    
+    <button class="quiz-submit" onclick="checkQuiz()">Submit Answers 💌</button>
+    <p class="quiz-result" id="quizResult"></p>
+  </div>
+  
+  <!-- Final Section (hidden until quiz is passed) -->
+  <div class="final-section" id="finalSection">
+    <p class="letter-paragraph">
+      <span class="highlight">This is the secret part only you can access, so I can finally get frisky.</span>
+
+      Kidding. For any prying eyes, we haven't kissed yet to protect our holy bond and preserve the innocence of our future children.
+    </p>
+
+    <p class="letter-paragraph">
+        Allison. You are the brightest ball of sunshine I have ever played basketball with. You make friends everywhere you go, you are infinitely kind to me, 
+        you have the best dog, your smile makes me giddy and calm, and you are gorgeous. Keep frolicking with me, please?
+      </p>
+  
+    
+    <p class="letter-paragraph signature">
+      Yours in snuggles,<br>Ben 
+    </p>
+  </div>
+</div>
+
+<div class="scroll-indicator" id="scrollIndicator" style="display: none;">
+  <span>Scroll to reveal</span>
+  <span class="scroll-arrow">↓</span>
+</div>
+
+<script>
+// Merlin pics for cursor trail
+const merlinPics = [
+  'merlin-pics/20251217_225443.webp',
+  'merlin-pics/IMG-20250825-WA0002.webp',
+  'merlin-pics/IMG-20250828-WA0012.webp',
+  'merlin-pics/IMG-20250829-WA0002.webp',
+  'merlin-pics/IMG-20250902-WA0018.webp',
+  'merlin-pics/IMG-20250902-WA0019.webp',
+  'merlin-pics/IMG-20250904-WA0002.webp',
+  'merlin-pics/IMG-20250904-WA0006.webp',
+  'merlin-pics/IMG-20250907-WA0026.webp',
+  'merlin-pics/IMG-20250917-WA0013.webp',
+  'merlin-pics/IMG-20250917-WA0014.webp',
+  'merlin-pics/IMG-20250926-WA0002.webp',
+  'merlin-pics/IMG-20250926-WA0006.webp',
+  'merlin-pics/IMG-20250929-WA0007.webp',
+  'merlin-pics/IMG-20250930-WA0004.webp'
+];
+
+// Password handling
+const PASSWORD = 'merlin';
+const passwordInput = document.getElementById('passwordInput');
+const passwordScreen = document.getElementById('passwordScreen');
+const passwordError = document.getElementById('passwordError');
+const letterContainer = document.getElementById('letterContainer');
+const scrollIndicator = document.getElementById('scrollIndicator');
+
+passwordInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    if (passwordInput.value.toLowerCase() === PASSWORD) {
+      passwordScreen.classList.add('hidden');
+      letterContainer.style.display = 'block';
+      scrollIndicator.style.display = 'flex';
+      initScrollReveal();
+      initCursorTrail();
+    } else {
+      passwordError.classList.add('show');
+      passwordInput.value = '';
+      setTimeout(() => passwordError.classList.remove('show'), 2000);
+    }
+  }
+});
+
+// Create stars background
+function createStars() {
+  const starsContainer = document.getElementById('stars');
+  for (let i = 0; i < 100; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    star.style.width = (Math.random() * 2 + 1) + 'px';
+    star.style.height = star.style.width;
+    starsContainer.appendChild(star);
+  }
+}
+createStars();
+
+// Scroll reveal for letters
+function initScrollReveal() {
+  const paragraphs = document.querySelectorAll('.letter-paragraph');
+  const allChars = [];
+  
+  // Wrap each character in a span
+  paragraphs.forEach(p => {
+    const html = p.innerHTML;
+    let newHtml = '';
+    let inTag = false;
+    let tagContent = '';
+    
+    for (let i = 0; i < html.length; i++) {
+      const char = html[i];
+      
+      if (char === '<') {
+        inTag = true;
+        tagContent = char;
+      } else if (char === '>') {
+        inTag = false;
+        tagContent += char;
+        newHtml += tagContent;
+        tagContent = '';
+      } else if (inTag) {
+        tagContent += char;
+      } else {
+        // Wrap character in span
+        if (char === ' ') {
+          newHtml += ' ';
+        } else {
+          newHtml += `<span class="letter-char">${char}</span>`;
+        }
+      }
+    }
+    
+    p.innerHTML = newHtml;
+  });
+  
+  // Get all character spans
+  document.querySelectorAll('.letter-char').forEach(char => {
+    allChars.push(char);
+  });
+  
+  // Pre-reveal the first ~15% of characters so something is visible on load
+  const initialRevealCount = Math.floor(allChars.length * 0.15);
+  allChars.slice(0, initialRevealCount).forEach(char => {
+    char.classList.add('revealed');
+  });
+  
+  // Get all image containers for reveal
+  const imageContainers = document.querySelectorAll('.letter-image-container');
+  
+  // Calculate document height and reveal chars based on scroll
+  function updateReveal() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = Math.min(scrollTop / docHeight, 1);
+    
+    // Reveal characters based on scroll position (starting after initial reveal)
+    const scrollChars = Math.floor(scrollPercent * (allChars.length - initialRevealCount) * 1.2);
+    const charsToReveal = initialRevealCount + scrollChars;
+    
+    allChars.forEach((char, index) => {
+      if (index < charsToReveal) {
+        char.classList.add('revealed');
+      }
+    });
+    
+    // Reveal images when they come into view
+    imageContainers.forEach(container => {
+      const rect = container.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.85) {
+        container.classList.add('revealed');
+      }
+    });
+    
+    // Hide scroll indicator after some scrolling
+    if (scrollTop > 200) {
+      scrollIndicator.classList.add('hidden');
+    }
+  }
+  
+  window.addEventListener('scroll', updateReveal);
+  updateReveal(); // Initial call
+}
+
+// Cursor trail with Merlin pics
+function initCursorTrail() {
+  const trail = [];
+  const maxTrail = 5;
+  let picIndex = 0;
+  
+  document.addEventListener('mousemove', (e) => {
+    // Create trail image immediately
+    const img = document.createElement('img');
+    img.className = 'trail-image';
+    img.src = merlinPics[picIndex % merlinPics.length];
+    img.style.left = (e.clientX - 32) + 'px';
+    img.style.top = (e.clientY - 32) + 'px';
+    document.body.appendChild(img);
+    
+    picIndex++;
+    trail.push(img);
+    
+    // Remove oldest if over max
+    if (trail.length > maxTrail) {
+      const oldest = trail.shift();
+      oldest.classList.add('fading');
+      setTimeout(() => oldest.remove(), 500);
+    }
+    
+    // Fade out after 500ms
+    setTimeout(() => {
+      img.classList.add('fading');
+      setTimeout(() => {
+        img.remove();
+        const idx = trail.indexOf(img);
+        if (idx > -1) trail.splice(idx, 1);
+      }, 500);
+    }, 500);
+  });
+  
+  // Touch support for mobile
+  document.addEventListener('touchmove', (e) => {
+    const touch = e.touches[0];
+    
+    const img = document.createElement('img');
+    img.className = 'trail-image';
+    img.src = merlinPics[picIndex % merlinPics.length];
+    img.style.left = (touch.clientX - 32) + 'px';
+    img.style.top = (touch.clientY - 32) + 'px';
+    document.body.appendChild(img);
+    
+    picIndex++;
+    trail.push(img);
+    
+    if (trail.length > maxTrail) {
+      const oldest = trail.shift();
+      oldest.classList.add('fading');
+      setTimeout(() => oldest.remove(), 500);
+    }
+    
+    setTimeout(() => {
+      img.classList.add('fading');
+      setTimeout(() => {
+        img.remove();
+        const idx = trail.indexOf(img);
+        if (idx > -1) trail.splice(idx, 1);
+      }, 500);
+    }, 500);
+  }, { passive: true });
+}
+
+// Preload some Merlin images
+merlinPics.slice(0, 5).forEach(src => {
+  const img = new Image();
+  img.src = src;
+});
+
+// Quiz functionality
+function selectOption(element, questionName) {
+  // Remove selected class from siblings
+  const parent = element.parentElement;
+  parent.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+  // Add selected class to clicked option
+  element.classList.add('selected');
+  // Check the radio button
+  element.querySelector('input').checked = true;
+}
+
+function toggleCheckbox(element, checkboxId) {
+  const checkbox = document.getElementById(checkboxId);
+  checkbox.checked = !checkbox.checked;
+  element.classList.toggle('selected', checkbox.checked);
+}
+
+function checkQuiz() {
+  const result = document.getElementById('quizResult');
+  let allCorrect = true;
+  let errors = [];
+  
+  // Q1: Any answer is correct, just needs to be answered
+  const q1Answer = document.querySelector('input[name="q1"]:checked');
+  if (!q1Answer) {
+    allCorrect = false;
+    errors.push("Question 1 needs an answer!");
+  }
+  
+  // Q2: Must be "White" (option c)
+  const q2Answer = document.querySelector('input[name="q2"]:checked');
+  if (!q2Answer) {
+    allCorrect = false;
+    errors.push("Question 2 needs an answer!");
+  } else if (q2Answer.value !== 'c') {
+    allCorrect = false;
+    errors.push("Question 2 is incorrect... think about that cute sea creature 🦭");
+  }
+  
+  // Q3: Must select ALL options
+  const q3a = document.getElementById('q3a').checked;
+  const q3b = document.getElementById('q3b').checked;
+  const q3c = document.getElementById('q3c').checked;
+  const q3d = document.getElementById('q3d').checked;
+  
+  if (!(q3a && q3b && q3c && q3d)) {
+    allCorrect = false;
+    errors.push("Question 3: Are you sure that's ALL the reasons? 🤔");
+  }
+  
+  if (allCorrect) {
+    result.textContent = "✨ Correct! The final chapter awaits... ✨";
+    result.className = 'quiz-result show success';
+    
+    // Hide quiz and show final section
+    setTimeout(() => {
+      document.getElementById('quizSection').style.display = 'none';
+      const finalSection = document.getElementById('finalSection');
+      finalSection.classList.add('unlocked');
+      
+      // Scroll to final section
+      finalSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      
+      // Re-run the character wrap for the final section paragraphs
+      initFinalSection();
+    }, 1500);
+  } else {
+    result.innerHTML = errors.join('<br>');
+    result.className = 'quiz-result show error';
+  }
+}
+
+function initFinalSection() {
+  const paragraphs = document.querySelectorAll('#finalSection .letter-paragraph');
+  
+  paragraphs.forEach(p => {
+    const html = p.innerHTML;
+    let newHtml = '';
+    let inTag = false;
+    let tagContent = '';
+    
+    for (let i = 0; i < html.length; i++) {
+      const char = html[i];
+      
+      if (char === '<') {
+        inTag = true;
+        tagContent = char;
+      } else if (char === '>') {
+        inTag = false;
+        tagContent += char;
+        newHtml += tagContent;
+        tagContent = '';
+      } else if (inTag) {
+        tagContent += char;
+      } else {
+        if (char === ' ') {
+          newHtml += ' ';
+        } else {
+          newHtml += `<span class="letter-char revealed">${char}</span>`;
+        }
+      }
+    }
+    
+    p.innerHTML = newHtml;
+  });
+}
+</script>
+
+</body>
+</html>

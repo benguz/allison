@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Allison's Check-in</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ffecd2 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: #4a3728;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+
+.screen.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  color: #d4638c;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+h2 {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  color: #7c5c6b;
+  margin-bottom: 30px;
+}
+
+.subtitle {
+  font-size: clamp(1rem, 3vw, 1.3rem);
+  color: #8b7355;
+  margin-bottom: 40px;
+  font-weight: 500;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  max-width: 600px;
+}
+
+.btn {
+  padding: 15px 30px;
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-good { background: linear-gradient(135deg, #a8e6cf, #88d8b0); color: #2d5a4b; }
+.btn-great { background: linear-gradient(135deg, #ffd93d, #ffb347); color: #6b4e00; }
+.btn-okay { background: linear-gradient(135deg, #b8c6db, #f5f7fa); color: #4a5568; }
+.btn-terrible { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+.btn-aaah { background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; }
+.btn-primary { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
+.btn-secondary { background: linear-gradient(135deg, #4facfe, #00f2fe); color: #1a365d; }
+.btn-skip { background: rgba(255,255,255,0.5); color: #666; }
+
+/* Emoji Cascade */
+.emoji-cascade {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.falling-emoji {
+  position: absolute;
+  font-size: 2rem;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0.7; }
+}
+
+/* Merlin Slideshow */
+.merlin-container {
+  width: 90%;
+  max-width: 500px;
+  height: 60vh;
+  max-height: 500px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  margin: 20px auto;
+  position: relative;
+  background: #222;
+}
+
+.merlin-media {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #222;
+}
+
+.latte-badge {
+  background: linear-gradient(135deg, #d4a5f9, #9ecfff);
+  padding: 15px 25px;
+  border-radius: 15px;
+  margin-top: 20px;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Breathing Animation */
+.breathing-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.breathing-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a8edea, #fed6e3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 30px;
+  box-shadow: 0 0 60px rgba(168, 237, 234, 0.5);
+}
+
+.breathing-circle.inhale {
+  animation: breatheIn 4s ease-in-out;
+}
+
+.breathing-circle.exhale {
+  animation: breatheOut 4s ease-in-out;
+}
+
+@keyframes breatheIn {
+  0% { transform: scale(1); box-shadow: 0 0 30px rgba(168, 237, 234, 0.3); }
+  100% { transform: scale(1.8); box-shadow: 0 0 80px rgba(168, 237, 234, 0.8); }
+}
+
+@keyframes breatheOut {
+  0% { transform: scale(1.8); box-shadow: 0 0 80px rgba(168, 237, 234, 0.8); }
+  100% { transform: scale(1); box-shadow: 0 0 30px rgba(168, 237, 234, 0.3); }
+}
+
+.breathing-text {
+  font-family: 'Caveat', cursive;
+  font-size: 2rem;
+  color: #5a7d7c;
+  margin-top: 20px;
+}
+
+/* Rage Mode */
+.rage-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  overflow: hidden;
+}
+
+.rage-title {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ff4444;
+  font-family: 'Caveat', cursive;
+  font-size: 2.5rem;
+  text-shadow: 0 0 20px #ff4444;
+  animation: rageFlicker 0.5s infinite;
+  z-index: 10;
+}
+
+@keyframes rageFlicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; text-shadow: 0 0 40px #ff4444; }
+}
+
+.smashable {
+  position: absolute;
+  font-size: clamp(2rem, 8vw, 4rem);
+  cursor: pointer;
+  transition: transform 0.1s;
+  user-select: none;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+}
+
+.smashable:hover {
+  transform: scale(1.2);
+}
+
+.smashable.smashed {
+  animation: smash 0.3s ease-out forwards;
+}
+
+@keyframes smash {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5) rotate(20deg); }
+  100% { transform: scale(0) rotate(180deg); opacity: 0; }
+}
+
+.explosion {
+  position: absolute;
+  font-size: 3rem;
+  animation: explode 0.5s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes explode {
+  0% { transform: scale(0); opacity: 1; }
+  50% { transform: scale(2); opacity: 0.8; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+.rage-progress {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.2);
+  padding: 10px 30px;
+  border-radius: 20px;
+  color: white;
+  font-weight: 600;
+  z-index: 10;
+}
+
+/* Sliders */
+.slider-container {
+  width: 90%;
+  max-width: 400px;
+  margin: 30px auto;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 10px;
+  background: linear-gradient(to right, #a8e6cf, #ffd93d, #ff6b6b);
+  outline: none;
+  margin: 20px 0;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  cursor: pointer;
+  border: 3px solid #d4638c;
+}
+
+.slider::-moz-range-thumb {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  cursor: pointer;
+  border: 3px solid #d4638c;
+}
+
+.slider-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #d4638c;
+  margin-bottom: 20px;
+}
+
+/* Body Diagram */
+.body-container {
+  position: relative;
+  width: 200px;
+  height: 350px;
+  margin: 20px auto;
+}
+
+.body-part {
+  position: absolute;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #666;
+  background: rgba(255,255,255,0.7);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.body-part:hover {
+  background: #ffb3ba;
+  transform: scale(1.1);
+  color: #8b4049;
+}
+
+.body-part.selected {
+  background: #ff6b6b;
+  color: white;
+  box-shadow: 0 0 20px rgba(255,107,107,0.5);
+}
+
+.body-svg {
+  width: 200px;
+  height: 350px;
+}
+
+/* Recommendation Box */
+.recommendation {
+  background: linear-gradient(135deg, #fff9e6, #ffe4c4);
+  padding: 25px;
+  border-radius: 20px;
+  max-width: 400px;
+  margin: 20px auto;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.recommendation h3 {
+  font-family: 'Caveat', cursive;
+  font-size: 1.8rem;
+  color: #d4638c;
+  margin-bottom: 15px;
+}
+
+.recommendation p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Attack Mode */
+.attack-text {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  color: #ff4444;
+  text-shadow: 0 0 20px rgba(255,68,68,0.5);
+  animation: attackPulse 0.5s infinite;
+}
+
+@keyframes attackPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Final Screen */
+.final-content {
+  width: 90%;
+  max-width: 600px;
+}
+
+/* Walking Dog */
+.dog-container {
+  position: fixed;
+  bottom: 50px;
+  left: -100px;
+  font-size: 4rem;
+  animation: walkDog 10s linear infinite;
+  z-index: 100;
+}
+
+@keyframes walkDog {
+  0% { left: -100px; transform: scaleX(1); }
+  45% { left: calc(100% + 100px); transform: scaleX(1); }
+  50% { left: calc(100% + 100px); transform: scaleX(-1); }
+  95% { left: -100px; transform: scaleX(-1); }
+  100% { left: -100px; transform: scaleX(1); }
+}
+
+.dog-message {
+  position: fixed;
+  background: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+  font-size: 1rem;
+  font-weight: 600;
+  animation: messageFloat 3s ease-in-out infinite;
+  z-index: 101;
+}
+
+@keyframes messageFloat {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(-10px); }
+}
+
+/* Love Note */
+.love-note {
+  background: #fffef0;
+  padding: 40px;
+  border-radius: 5px;
+  box-shadow: 0 5px 30px rgba(0,0,0,0.15);
+  max-width: 400px;
+  margin: 0 auto;
+  transform: rotate(-2deg);
+  font-family: 'Caveat', cursive;
+  font-size: 1.5rem;
+  line-height: 1.8;
+  color: #5a4a3a;
+  position: relative;
+}
+
+.love-note::before {
+  content: '💕';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  font-size: 2.5rem;
+}
+
+/* Quick Cut Slideshow */
+.quick-cut {
+  width: 90%;
+  max-width: 500px;
+  height: 50vh;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.quick-cut img, .quick-cut video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #222;
+}
+
+/* Big Message */
+.big-message {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(3rem, 12vw, 6rem);
+  color: #d4638c;
+  text-shadow: 3px 3px 6px rgba(0,0,0,0.1);
+  animation: bounce 0.5s ease infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Snuggle Link */
+.snuggle-link {
+  display: inline-block;
+  background: linear-gradient(135deg, #ff9a9e, #fecfef);
+  color: #8b4049;
+  padding: 20px 40px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-top: 20px;
+  box-shadow: 0 5px 20px rgba(255,154,158,0.4);
+  transition: all 0.3s;
+}
+
+.snuggle-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(255,154,158,0.5);
+}
+
+/* Utility */
+.hidden { display: none !important; }
+.mt-20 { margin-top: 20px; }
+.mb-20 { margin-bottom: 20px; }
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  .buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn {
+    width: 100%;
+    padding: 18px 30px;
+  }
+  
+  .body-container {
+    transform: scale(0.9);
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="emoji-cascade" id="emojiCascade"></div>
+
+<!-- Screen 1: How are you feeling? -->
+<div class="screen active" id="screen-feeling">
+  <h1>Allison's Check-in 💜</h1>
+  <h2>How are you feeling?</h2>
+  <div class="buttons">
+    <button class="btn btn-good" onclick="handleFeeling('good')">Good 😊</button>
+    <button class="btn btn-great" onclick="handleFeeling('great')">GREAT ✨</button>
+    <button class="btn btn-okay" onclick="handleFeeling('okay')">Okay 😐</button>
+    <button class="btn btn-terrible" onclick="handleFeeling('terrible')">TERRIBLE 😢</button>
+    <button class="btn btn-aaah" onclick="handleFeeling('aaah')">AAAAAAAH 😱</button>
+  </div>
+</div>
+
+<!-- Screen: GREAT - Merlin Slideshow -->
+<div class="screen" id="screen-great">
+  <h2>Amazing! 🌟</h2>
+  <p class="subtitle">Here's a picture of Merlin to keep the good times rolling!</p>
+  <div class="merlin-container">
+    <img id="merlinMedia" class="merlin-media" src="" alt="Merlin">
+  </div>
+  <div class="latte-badge">☕ You earned a lavender oat milk matcha latte! 🍵</div>
+  <button class="btn btn-primary mt-20" onclick="goToScreen('screen-final')">Continue to Feel-Good Extras →</button>
+</div>
+
+<!-- Screen: TERRIBLE - Breathing -->
+<div class="screen" id="screen-breathing">
+  <h2>Let's take a moment to breathe...</h2>
+  <p class="subtitle">Follow the circle and text</p>
+  <div class="breathing-container">
+    <div class="breathing-circle" id="breathingCircle">
+      <span id="breathEmoji">🌸</span>
+    </div>
+    <p class="breathing-text" id="breathingText">Get ready...</p>
+  </div>
+  <p id="breathCount" class="subtitle">Cycle 0 of 4</p>
+</div>
+
+<!-- Screen: AAAAAAAH - Rage Mode -->
+<div class="screen" id="screen-rage">
+  <div class="rage-container" id="rageContainer">
+    <h2 class="rage-title">🔥 RAGE MODE 🔥</h2>
+    <p class="rage-progress" id="rageProgress">Smash: 0 / 10</p>
+  </div>
+</div>
+
+<!-- Screen: Eating -->
+<div class="screen" id="screen-eating">
+  <h2>🍽️ Food Check!</h2>
+  <p class="subtitle">How many hours since you've eaten a real meal?<br>(snacks don't count!!)</p>
+  <div class="slider-container">
+    <p class="slider-value"><span id="eatValue">0</span> hours</p>
+    <input type="range" min="0" max="12" value="0" class="slider" id="eatSlider" oninput="updateEatSlider()">
+  </div>
+  <button class="btn btn-primary" onclick="checkEating()">Continue →</button>
+</div>
+
+<!-- Screen: EAT!! -->
+<div class="screen" id="screen-eat-warning">
+  <p class="big-message">EAT!! 🍔🍕🍜</p>
+  <p class="subtitle">Your body needs fuel!</p>
+  <button class="btn btn-primary mt-20" onclick="goToScreen('screen-sleep')">Okay okay, I'll eat... →</button>
+</div>
+
+<!-- Screen: Sleep -->
+<div class="screen" id="screen-sleep">
+  <h2>😴 Sleep Check!</h2>
+  <p class="subtitle">How many hours did you sleep last night?</p>
+  <div class="slider-container">
+    <p class="slider-value"><span id="sleepValue">8</span> hours</p>
+    <input type="range" min="0" max="12" value="8" class="slider" id="sleepSlider" oninput="updateSleepSlider()">
+  </div>
+  <button class="btn btn-primary" onclick="checkSleep()">Continue →</button>
+</div>
+
+<!-- Screen: NAP!! -->
+<div class="screen" id="screen-nap-warning">
+  <p class="big-message">NAP TIME!!! 💤😴</p>
+  <p class="subtitle">Rest is important!</p>
+  <button class="btn btn-primary mt-20" onclick="goToScreen('screen-pain')">Fine, I'll rest... →</button>
+</div>
+
+<!-- Screen: Pain -->
+<div class="screen" id="screen-pain">
+  <h2>Does anything hurt? 🩹</h2>
+  <p class="subtitle">Tap on the body part that hurts, or skip if you're fine!</p>
+  
+  <div class="body-container">
+    <svg class="body-svg" viewBox="0 0 200 350">
+      <!-- Simple body outline -->
+      <ellipse cx="100" cy="35" rx="30" ry="35" fill="#ffd5c8" stroke="#e8b4a8" stroke-width="2"/>
+      <rect x="70" y="70" width="60" height="100" rx="15" fill="#ffd5c8" stroke="#e8b4a8" stroke-width="2"/>
+      <rect x="40" y="75" width="30" height="80" rx="10" fill="#ffd5c8" stroke="#e8b4a8" stroke-width="2"/>
+      <rect x="130" y="75" width="30" height="80" rx="10" fill="#ffd5c8" stroke="#e8b4a8" stroke-width="2"/>
+      <rect x="75" y="170" width="22" height="100" rx="8" fill="#ffd5c8" stroke="#e8b4a8" stroke-width="2"/>
+      <rect x="103" y="170" width="22" height="100" rx="8" fill="#ffd5c8" stroke="#e8b4a8" stroke-width="2"/>
+    </svg>
+    
+    <div class="body-part" style="top: 15px; left: 75px; width: 50px; height: 45px;" onclick="selectPain('head')">Head</div>
+    <div class="body-part" style="top: 110px; left: 75px; width: 50px; height: 40px;" onclick="selectPain('tummy')">Tummy</div>
+    <div class="body-part" style="top: 90px; left: 20px; width: 40px; height: 35px; font-size: 0.7rem;" onclick="selectPain('arm')">Arm</div>
+    <div class="body-part" style="top: 90px; left: 140px; width: 40px; height: 35px; font-size: 0.7rem;" onclick="selectPain('arm')">Arm</div>
+    <div class="body-part" style="top: 200px; left: 65px; width: 35px; height: 35px; font-size: 0.7rem;" onclick="selectPain('leg')">Leg</div>
+    <div class="body-part" style="top: 200px; left: 100px; width: 35px; height: 35px; font-size: 0.7rem;" onclick="selectPain('leg')">Leg</div>
+  </div>
+  
+  <button class="btn btn-skip" onclick="goToScreen('screen-wronged')">Nope, I'm fine! →</button>
+</div>
+
+<!-- Screen: Pain Recommendation -->
+<div class="screen" id="screen-pain-rec">
+  <h2 id="painRecTitle">Recommendation</h2>
+  <div class="recommendation" id="painRecContent"></div>
+  <button class="btn btn-primary mt-20" onclick="goToScreen('screen-wronged')">Got it! →</button>
+</div>
+
+<!-- Screen: Did somebody wrong you? -->
+<div class="screen" id="screen-wronged">
+  <h2>Did somebody wrong you? 😤</h2>
+  <p class="subtitle">We need to know...</p>
+  <div class="buttons">
+    <button class="btn btn-aaah" onclick="handleWronged(true)">YES 😠</button>
+    <button class="btn btn-good" onclick="handleWronged(false)">No, I'm good 😌</button>
+  </div>
+</div>
+
+<!-- Screen: Merlin Attack -->
+<div class="screen" id="screen-attack">
+  <p class="attack-text">MERLIN WILL ATTACK THEM!! 🐱💥</p>
+  <div class="merlin-container">
+    <img id="attackMerlin" class="merlin-media" src="" alt="Merlin ready for battle">
+  </div>
+  <button class="btn btn-primary mt-20" onclick="goToScreen('screen-snuggles')">Thanks Merlin! →</button>
+</div>
+
+<!-- Screen: Need snuggles? -->
+<div class="screen" id="screen-snuggles">
+  <h2>Do you need snuggles? 🤗</h2>
+  <p class="subtitle">Be honest...</p>
+  <div class="buttons">
+    <button class="btn btn-primary" onclick="handleSnuggles(true)">Yes please 🥺</button>
+    <button class="btn btn-okay" onclick="handleSnuggles(false)">No thanks</button>
+  </div>
+</div>
+
+<!-- Screen: Snuggle Request -->
+<div class="screen" id="screen-snuggle-request">
+  <h2>Snuggles incoming! 💕</h2>
+  <p class="subtitle">Click below to send a snuggle request:</p>
+  <a href="mailto:benjamin.guzovsky@gmail.com?subject=I%20Need%20Snuggles!&body=Hi%20Ben%2C%0A%0AI%20need%20snuggles%20please!%20%F0%9F%A5%BA%0A%0ALove%2C%0AAllison" class="snuggle-link">📧 Request Snuggles</a>
+  <button class="btn btn-secondary mt-20" onclick="goToScreen('screen-final')">Continue →</button>
+</div>
+
+<!-- Screen: No snuggles?! -->
+<div class="screen" id="screen-no-snuggles">
+  <p class="big-message">WHAT ARE YOU TALKING ABOUT??</p>
+  <p class="subtitle">Everyone needs snuggles! 🤨</p>
+  <button class="btn btn-primary mt-20" onclick="goToScreen('screen-final')">Fine, continue... →</button>
+</div>
+
+<!-- Screen: Final -->
+<div class="screen" id="screen-final">
+  <h2>Here's some more stuff to make you feel better! 💖</h2>
+  <div class="final-content" id="finalContent"></div>
+  <button class="btn btn-primary mt-20" onclick="resetCheckin()">Start Over 🔄</button>
+</div>
+
+<script>
+// Merlin media files (converted to webp/webm)
+const merlinImages = [
+  'merlin-pics/20251217_225443.webp',
+  'merlin-pics/IMG-20250825-WA0002.webp',
+  'merlin-pics/IMG-20250828-WA0012.webp',
+  'merlin-pics/IMG-20250829-WA0002.webp',
+  'merlin-pics/IMG-20250902-WA0018.webp',
+  'merlin-pics/IMG-20250902-WA0019.webp',
+  'merlin-pics/IMG-20250904-WA0002.webp',
+  'merlin-pics/IMG-20250904-WA0006.webp',
+  'merlin-pics/IMG-20250907-WA0026.webp',
+  'merlin-pics/IMG-20250917-WA0013.webp',
+  'merlin-pics/IMG-20250917-WA0014.webp',
+  'merlin-pics/IMG-20250926-WA0002.webp',
+  'merlin-pics/IMG-20250926-WA0006.webp',
+  'merlin-pics/IMG-20250929-WA0007.webp',
+  'merlin-pics/IMG-20250930-WA0004.webp',
+  'merlin-pics/IMG-20250930-WA0009.webp',
+  'merlin-pics/IMG-20251001-WA0003.webp',
+  'merlin-pics/IMG-20251001-WA0008.webp',
+  'merlin-pics/IMG-20251004-WA0001.webp',
+  'merlin-pics/IMG-20251006-WA0028.webp',
+  'merlin-pics/IMG-20251008-WA0001.webp',
+  'merlin-pics/IMG-20251010-WA0002.webp',
+  'merlin-pics/IMG-20251013-WA0005.webp',
+  'merlin-pics/IMG-20251014-WA0065.webp',
+  'merlin-pics/IMG-20251015-WA0003.webp',
+  'merlin-pics/IMG-20251015-WA0005.webp',
+  'merlin-pics/IMG-20251021-WA0003.webp',
+  'merlin-pics/IMG-20251102-WA0002.webp',
+  'merlin-pics/IMG-20251105-WA0006.webp',
+  'merlin-pics/IMG-20251106-WA0002.webp',
+  'merlin-pics/IMG-20251111-WA0002.webp',
+  'merlin-pics/IMG-20251113-WA0006.webp',
+  'merlin-pics/IMG-20251113-WA0008.webp',
+  'merlin-pics/IMG-20251115-WA0001.webp',
+  'merlin-pics/IMG-20251122-WA0026.webp',
+  'merlin-pics/IMG-20251122-WA0029.webp',
+  'merlin-pics/IMG-20251122-WA0034.webp',
+  'merlin-pics/IMG-20251122-WA0038.webp',
+  'merlin-pics/IMG-20251129-WA0011.webp',
+  'merlin-pics/IMG-20251129-WA0013.webp',
+  'merlin-pics/IMG-20251212-WA0006.webp',
+  'merlin-pics/IMG-20251221-WA0004.webp',
+  'merlin-pics/IMG-20251224-WA0003.webp'
+];
+
+const merlinVideos = [
+  'merlin-pics/VID_20250807_173020.webm',
+  'merlin-pics/VID_20250807_173026.webm',
+  'merlin-pics/VID_20250807_173040.webm',
+  'merlin-pics/VID_20250808_232520.webm',
+  'merlin-pics/VID_20251002_185041.webm',
+  'merlin-pics/VID-20231009-WA0002.webm',
+  'merlin-pics/VID-20250110-WA0000.webm',
+  'merlin-pics/VID-20250217-WA0001.webm',
+  'merlin-pics/VID-20250515-WA0043.webm',
+  'merlin-pics/VID-20250716-WA0006.webm',
+  'merlin-pics/VID-20250727-WA0012.webm',
+  'merlin-pics/VID-20250809-WA0007.webm',
+  'merlin-pics/VID-20250810-WA0045.webm'
+];
+
+const allMerlinMedia = [...merlinImages, ...merlinVideos];
+
+let merlinIndex = 0;
+let merlinInterval = null;
+
+// Emoji sets for different moods
+const emojiSets = {
+  great: ['✨', '🌟', '💫', '⭐', '🎉', '🎊', '💖', '🌈', '🦋', '🌸'],
+  good: ['😊', '💚', '🌿', '☘️', '🌱', '💛', '🌻', '🐝'],
+  okay: ['😐', '🙂', '💭', '☁️', '🌥️'],
+  terrible: ['💙', '💜', '🌊', '🫧', '✨', '🌸'],
+  aaah: ['💥', '🔥', '⚡', '💢', '😤', '🌋'],
+  food: ['🍕', '🍔', '🍟', '🌮', '🍜', '🍣', '🍱', '🥗', '🍝', '🍛', '🥐', '🍳'],
+  sleep: ['😴', '💤', '🌙', '⭐', '🛏️', '🧸', '☁️', '🌜']
+};
+
+// Love notes for final screen - from index.html
+const loveNotes = [
+  "You taught me that the slivers aren't an accident. 💕",
+  "You light up when you talk about those damn darn silly side characters - never stop :)",
+  "Finding you was like searching for the perfect emoji for a vibe you couldn't quite place and BOOM, now you're my top emoji. 💖",
+  "I hope this note makes you feel as powerful as running does. GOGOGO!",
+  "Sometimes I think about the pictures I took of you on our evening picnic by Doe to help me fall asleep 🌙",
+  "If you were a raisin, I would start liking raisins. If you were my nemesis, I would make it opposite day every day.",
+  "You are very fun to kiss, even when your breath smells really bad 😘",
+  "You are the best thing that's ever been mine ❤️",
+  "I love it when you jump on the bed because that's when I know you really feel safe and comfy with me.",
+  "You're like an elephant. When I see you anywhere outside a zoo I'm like woah, that's amazing. 🐘",
+  "When you start talking about some work drama I'm always like 💅💅 mmmm this gonna be good",
+  "I love you, I will never stop loving you, I believe in you, I will never stop believing in you 💜",
+  "When you send me pictures of you in a new dress I melt 🫠",
+  "Allison things that make me melt: Her smile. Her hair lookin a lil' messy. Her smile.",
+  "Can you BE any more perfect?",
+  "Omg are you a supermodel can I have your autograph omg you do science too??!?! 🔬",
+  "I am yours :)",
+  "You are the opposite of nefarious ✨",
+  "Sitting with you is the best. You have the warmest energy.",
+  "Have you ever seen Allison and Batman in the same room? Because that would be so cool, they're like my two favorite people. 🦇",
+  "I will pay $12 a year for this website domain forever because the statement will always be true. 💕",
+  "You are a chortler at hartle 😂",
+  "I love you. I love you.",
+  "Are you a mirror, because when I look at you I'm like dayuuuuum you fine. 🔥",
+  "Piggy back rides with you are a dream come true 🐷",
+  "Your prose makes Times New Roman sexy again ✍️",
+  "You are so supportive. You make me feel like I can do anything.",
+  "You are a lion, if a lion discovered Taylor Swift 🦁",
+  "Be proud. My dad thinks you chew quietly.",
+  "Allison things that make me swoon: Pinching her nose. Putting my mouth on her nose. Her nose. 👃",
+  "I think you soothe my gut biome. I mean that.",
+  "You feel like a bagel when you're warm 🥯",
+  "What's the difference between a jpg and a jpeg? I dunno, Allison looks cute in both. 📸",
+  "When you leave the room I write these, and I get to keep thinking of you.",
+  "I miss you when we're not close. Because, like, when you're far away, it's harder to hit you with a baseball. ⚾",
+  "Crazy to think there was a time you weren't on my camera roll.",
+  "You have incredible style. I never knew that was important to me until I saw you ~pose~ 💃",
+  "You are my sunshine, I mean it ☀️",
+  "Writing a few of these every day has been the best part of my day :)",
+  "Keep smiling today, I love you :) 💖"
+];
+
+const dogMessages = [
+  "You're doing great!",
+  "I believe in you!",
+  "You deserve happiness!",
+  "Take a deep breath!",
+  "You're amazing!",
+  "Keep going, friend!",
+  "Woof woof! (That means I love you)",
+  "You've got this!",
+  "Be kind to yourself!",
+  "You're wonderful!"
+];
+
+function goToScreen(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+}
+
+function cascadeEmojis(type, duration = 3000) {
+  const container = document.getElementById('emojiCascade');
+  const emojis = emojiSets[type] || emojiSets.good;
+  const count = 30;
+  
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const emoji = document.createElement('div');
+      emoji.className = 'falling-emoji';
+      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      emoji.style.left = Math.random() * 100 + '%';
+      emoji.style.animationDuration = (2 + Math.random() * 2) + 's';
+      emoji.style.fontSize = (1.5 + Math.random() * 1.5) + 'rem';
+      container.appendChild(emoji);
+      
+      setTimeout(() => emoji.remove(), 4000);
+    }, i * (duration / count));
+  }
+}
+
+function handleFeeling(feeling) {
+  cascadeEmojis(feeling === 'aaah' ? 'aaah' : feeling);
+  
+  setTimeout(() => {
+    switch(feeling) {
+      case 'great':
+        startMerlinSlideshow();
+        goToScreen('screen-great');
+        break;
+      case 'terrible':
+        goToScreen('screen-breathing');
+        startBreathing();
+        break;
+      case 'aaah':
+        goToScreen('screen-rage');
+        startRageMode();
+        break;
+      default:
+        goToScreen('screen-eating');
+    }
+  }, 1500);
+}
+
+// Merlin Slideshow
+function startMerlinSlideshow() {
+  const container = document.querySelector('#screen-great .merlin-container');
+  updateMerlinMedia(container, 'merlinMedia');
+  
+  merlinInterval = setInterval(() => {
+    merlinIndex = (merlinIndex + 1) % allMerlinMedia.length;
+    updateMerlinMedia(container, 'merlinMedia');
+  }, 3000);
+}
+
+function updateMerlinMedia(container, mediaId) {
+  const src = allMerlinMedia[merlinIndex];
+  const isVideo = src.endsWith('.webm');
+  
+  container.innerHTML = '';
+  
+  if (isVideo) {
+    const video = document.createElement('video');
+    video.id = mediaId;
+    video.className = 'merlin-media';
+    video.src = src;
+    video.autoplay = true;
+    video.loop = true;
+    video.muted = true;
+    video.playsInline = true;
+    container.appendChild(video);
+  } else {
+    const img = document.createElement('img');
+    img.id = mediaId;
+    img.className = 'merlin-media';
+    img.src = src;
+    img.alt = 'Merlin';
+    container.appendChild(img);
+  }
+}
+
+// Breathing Exercise
+function startBreathing() {
+  const circle = document.getElementById('breathingCircle');
+  const text = document.getElementById('breathingText');
+  const countEl = document.getElementById('breathCount');
+  let cycle = 0;
+  const totalCycles = 4;
+  
+  function breathCycle() {
+    if (cycle >= totalCycles) {
+      text.textContent = 'Feeling better? 💜';
+      setTimeout(() => goToScreen('screen-eating'), 2000);
+      return;
+    }
+    
+    cycle++;
+    countEl.textContent = `Cycle ${cycle} of ${totalCycles}`;
+    
+    // Inhale
+    circle.className = 'breathing-circle inhale';
+    text.textContent = 'Inhale...';
+    
+    setTimeout(() => {
+      // Exhale
+      circle.className = 'breathing-circle exhale';
+      text.textContent = 'Exhale...';
+      
+      setTimeout(breathCycle, 4000);
+    }, 4000);
+  }
+  
+  setTimeout(breathCycle, 1000);
+}
+
+// Rage Mode
+function startRageMode() {
+  const container = document.getElementById('rageContainer');
+  const progressEl = document.getElementById('rageProgress');
+  // Smashables: alarm clock, file folder, pillow (bed emoji), scooter, cat, and newman image
+  const emojiSmashables = ['⏰', '📁', '🛏️', '🛴', '🐱', '🗃️'];
+  const hasNewman = true;
+  let smashed = 0;
+  const target = 10;
+  
+  function spawnSmashable() {
+    if (smashed >= target) return;
+    
+    const item = document.createElement('div');
+    item.className = 'smashable';
+    item.style.left = (10 + Math.random() * 70) + '%';
+    item.style.top = (15 + Math.random() * 60) + '%';
+    
+    // Randomly decide if this is an emoji or newman image
+    const useNewman = hasNewman && Math.random() < 0.8;
+    
+    if (useNewman) {
+      const img = document.createElement('img');
+      img.src = 'images/newman.jpg';
+      img.style.width = '60px';
+      img.style.height = '60px';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '8px';
+      item.appendChild(img);
+    } else {
+      item.textContent = emojiSmashables[Math.floor(Math.random() * emojiSmashables.length)];
+    }
+    
+    item.onclick = () => {
+      if (item.classList.contains('smashed')) return;
+      
+      item.classList.add('smashed');
+      smashed++;
+      progressEl.textContent = `Smash: ${smashed} / ${target}`;
+      
+      // Explosion effect
+      const explosion = document.createElement('div');
+      explosion.className = 'explosion';
+      explosion.textContent = '💥';
+      explosion.style.left = item.style.left;
+      explosion.style.top = item.style.top;
+      container.appendChild(explosion);
+      
+      setTimeout(() => {
+        item.remove();
+        explosion.remove();
+      }, 500);
+      
+      if (smashed >= target) {
+        setTimeout(() => {
+          progressEl.textContent = 'Nice job! Feel better? 😌';
+          setTimeout(() => goToScreen('screen-eating'), 2000);
+        }, 500);
+      }
+    };
+    
+    container.appendChild(item);
+  }
+  
+  // Spawn items periodically
+  for (let i = 0; i < 5; i++) {
+    setTimeout(spawnSmashable, i * 200);
+  }
+  
+  const spawnInterval = setInterval(() => {
+    if (smashed >= target) {
+      clearInterval(spawnInterval);
+      return;
+    }
+    spawnSmashable();
+  }, 800);
+}
+
+// Sliders
+function updateEatSlider() {
+  document.getElementById('eatValue').textContent = document.getElementById('eatSlider').value;
+}
+
+function updateSleepSlider() {
+  document.getElementById('sleepValue').textContent = document.getElementById('sleepSlider').value;
+}
+
+function checkEating() {
+  const hours = parseInt(document.getElementById('eatSlider').value);
+  if (hours > 5) {
+    cascadeEmojis('food');
+    setTimeout(() => goToScreen('screen-eat-warning'), 1500);
+  } else {
+    goToScreen('screen-sleep');
+  }
+}
+
+function checkSleep() {
+  const hours = parseInt(document.getElementById('sleepSlider').value);
+  if (hours < 7) {
+    cascadeEmojis('sleep');
+    setTimeout(() => goToScreen('screen-nap-warning'), 1500);
+  } else {
+    goToScreen('screen-pain');
+  }
+}
+
+// Pain selection
+function selectPain(area) {
+  const recommendations = {
+    head: {
+      title: '🤕 Head hurting?',
+      content: `
+        <p>💧 Drink some water - you might be dehydrated!</p>
+        <p>📵 Take a break from screens</p>
+        <p>🌬️ Get some fresh air</p>
+        <p>GIVE ME A KISS</p>
+      `
+    },
+    tummy: {
+      title: '🤢 Tummy troubles?',
+      content: `
+        <p>💊 Take a Culturelle (probiotics are your friend!)</p>
+        <p>🍵 Sip some ginger or peppermint tea</p>
+        <p>🍌 Eat something gentle like crackers or banana</p>
+        <p>💨 Find a private place to... release some pressure 😅</p>
+      `
+    },
+    arm: {
+      title: '💪 Arm ache?',
+      content: `
+        <p><strong>Tbh i never thought you would click this</strong></p>
+        <p>Why does your arm hurt?</p>
+      `
+    },
+    leg: {
+      title: '🦵 Leg pain?',
+      content: `
+        <p><strong>With muscular thighs like yours, it's normal to feel some soreness after exercise.</strong></p>
+        <p>GET A PIGGY BACK RIDE GET OFF THOSE LEGGOS</p>
+        <p>DO A HANDSTAND!!!</p>
+        <p>DRINK WATER!!!</p>
+      `
+    }
+  };
+  
+  const rec = recommendations[area];
+  document.getElementById('painRecTitle').textContent = rec.title;
+  document.getElementById('painRecContent').innerHTML = rec.content;
+  goToScreen('screen-pain-rec');
+}
+
+// Wronged handling
+function handleWronged(yes) {
+  if (yes) {
+    const randomMerlin = merlinImages[Math.floor(Math.random() * merlinImages.length)];
+    document.getElementById('attackMerlin').src = randomMerlin;
+    
+    // Start cycling through angry Merlin pics
+    let attackIndex = 0;
+    const attackInterval = setInterval(() => {
+      attackIndex = (attackIndex + 1) % merlinImages.length;
+      document.getElementById('attackMerlin').src = merlinImages[attackIndex];
+    }, 500);
+    
+    // Store interval to clear later
+    window.attackInterval = attackInterval;
+    
+    goToScreen('screen-attack');
+  } else {
+    goToScreen('screen-snuggles');
+  }
+}
+
+// Snuggles handling
+function handleSnuggles(yes) {
+  if (yes) {
+    goToScreen('screen-snuggle-request');
+  } else {
+    goToScreen('screen-no-snuggles');
+  }
+}
+
+// Final screen content
+function showFinalContent() {
+  const finalContent = document.getElementById('finalContent');
+  const options = ['slideshow', 'lovenote', 'dog'];
+  const choice = options[Math.floor(Math.random() * options.length)];
+  
+  // Clear any existing content
+  finalContent.innerHTML = '';
+  
+  // Remove any existing dog elements
+  document.querySelectorAll('.dog-container, .dog-message').forEach(el => el.remove());
+  
+  switch(choice) {
+    case 'slideshow':
+      finalContent.innerHTML = `
+        <p class="subtitle">Quick-cut Merlin compilation! 🐱✨</p>
+        <div class="quick-cut" id="quickCutContainer"></div>
+      `;
+      startQuickCut();
+      break;
+      
+    case 'lovenote':
+      const note = loveNotes[Math.floor(Math.random() * loveNotes.length)];
+      finalContent.innerHTML = `
+        <div class="love-note">${note}</div>
+      `;
+      break;
+      
+    case 'dog':
+      finalContent.innerHTML = `<p class="subtitle">A friend has arrived to cheer you up! 🐕</p>`;
+      startWalkingDog();
+      break;
+  }
+}
+
+function startQuickCut() {
+  const container = document.getElementById('quickCutContainer');
+  let index = 0;
+  
+  function showNext() {
+    const src = merlinImages[index];
+    container.innerHTML = `<img src="${src}" alt="Merlin">`;
+    index = (index + 1) % merlinImages.length;
+  }
+  
+  showNext();
+  setInterval(showNext, 400); // Fast cuts!
+}
+
+function startWalkingDog() {
+  const dog = document.createElement('div');
+  dog.className = 'dog-container';
+  dog.textContent = '🐕';
+  document.body.appendChild(dog);
+  
+  let messageIndex = 0;
+  
+  function showMessage() {
+    // Remove old message
+    const oldMsg = document.querySelector('.dog-message');
+    if (oldMsg) oldMsg.remove();
+    
+    const msg = document.createElement('div');
+    msg.className = 'dog-message';
+    msg.textContent = dogMessages[messageIndex];
+    msg.style.left = dog.getBoundingClientRect().left + 'px';
+    msg.style.bottom = '100px';
+    document.body.appendChild(msg);
+    
+    // Update position with dog
+    const updatePos = setInterval(() => {
+      const dogRect = dog.getBoundingClientRect();
+      msg.style.left = Math.max(10, Math.min(window.innerWidth - 200, dogRect.left)) + 'px';
+    }, 50);
+    
+    setTimeout(() => {
+      clearInterval(updatePos);
+      msg.remove();
+      messageIndex = (messageIndex + 1) % dogMessages.length;
+    }, 2500);
+  }
+  
+  showMessage();
+  setInterval(showMessage, 3000);
+}
+
+// Navigation to final screen should trigger content
+const originalGoToScreen = goToScreen;
+goToScreen = function(screenId) {
+  // Clear intervals when leaving certain screens
+  if (merlinInterval) clearInterval(merlinInterval);
+  if (window.attackInterval) clearInterval(window.attackInterval);
+  
+  originalGoToScreen(screenId);
+  
+  if (screenId === 'screen-final') {
+    showFinalContent();
+  }
+};
+
+function resetCheckin() {
+  // Clear all intervals and dog elements
+  if (merlinInterval) clearInterval(merlinInterval);
+  if (window.attackInterval) clearInterval(window.attackInterval);
+  document.querySelectorAll('.dog-container, .dog-message').forEach(el => el.remove());
+  
+  // Reset sliders
+  document.getElementById('eatSlider').value = 0;
+  document.getElementById('eatValue').textContent = '0';
+  document.getElementById('sleepSlider').value = 8;
+  document.getElementById('sleepValue').textContent = '8';
+  
+  // Reset merlin index
+  merlinIndex = 0;
+  
+  // Clear rage container extras
+  const rageContainer = document.getElementById('rageContainer');
+  rageContainer.querySelectorAll('.smashable, .explosion').forEach(el => el.remove());
+  document.getElementById('rageProgress').textContent = 'Smash: 0 / 10';
+  
+  goToScreen('screen-feeling');
+}
+
+// Preload some Merlin images
+merlinImages.slice(0, 5).forEach(src => {
+  const img = new Image();
+  img.src = src;
+});
+</script>
+
+</body>
+</html>
+
