@@ -149,6 +149,9 @@ h2 {
   margin: 20px auto;
   position: relative;
   background: #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .merlin-media {
@@ -156,6 +159,7 @@ h2 {
   height: 100%;
   object-fit: contain;
   background: #222;
+  transition: opacity 0.2s ease;
 }
 
 .latte-badge {
@@ -413,6 +417,10 @@ h2 {
 .final-content {
   width: 90%;
   max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Walking Dog */
@@ -918,26 +926,54 @@ function updateMerlinMedia(container, mediaId) {
   const src = allMerlinMedia[merlinIndex];
   const isVideo = src.endsWith('.webm');
   
-  container.innerHTML = '';
+  // Create the new element first
+  let newElement;
   
   if (isVideo) {
-    const video = document.createElement('video');
-    video.id = mediaId;
-    video.className = 'merlin-media';
-    video.src = src;
-    video.autoplay = true;
-    video.loop = true;
-    video.muted = true;
-    video.playsInline = true;
-    container.appendChild(video);
+    newElement = document.createElement('video');
+    newElement.id = mediaId;
+    newElement.className = 'merlin-media';
+    newElement.src = src;
+    newElement.autoplay = true;
+    newElement.loop = true;
+    newElement.muted = true;
+    newElement.playsInline = true;
+    newElement.style.opacity = '0';
+    newElement.style.position = 'absolute';
+    container.appendChild(newElement);
+    
+    // Fade in once ready
+    newElement.onloadeddata = () => fadeInNewMedia(container, newElement);
   } else {
-    const img = document.createElement('img');
-    img.id = mediaId;
-    img.className = 'merlin-media';
-    img.src = src;
-    img.alt = 'Merlin';
-    container.appendChild(img);
+    newElement = document.createElement('img');
+    newElement.id = mediaId;
+    newElement.className = 'merlin-media';
+    newElement.alt = 'Merlin';
+    newElement.style.opacity = '0';
+    newElement.style.position = 'absolute';
+    container.appendChild(newElement);
+    
+    // Fade in once loaded
+    newElement.onload = () => fadeInNewMedia(container, newElement);
+    newElement.src = src;
   }
+}
+
+function fadeInNewMedia(container, newElement) {
+  // Fade out old elements
+  const oldElements = container.querySelectorAll('.merlin-media');
+  oldElements.forEach(el => {
+    if (el !== newElement) {
+      el.style.transition = 'opacity 0.3s ease';
+      el.style.opacity = '0';
+      setTimeout(() => el.remove(), 300);
+    }
+  });
+  
+  // Fade in new element
+  newElement.style.transition = 'opacity 0.3s ease';
+  newElement.style.opacity = '1';
+  newElement.style.position = 'relative';
 }
 
 // Breathing Exercise
